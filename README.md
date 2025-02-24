@@ -26,29 +26,13 @@ PharmaWeb é um sistema de gestão de pedidos e estoque de medicamentos, desenvo
 4. Compile e inicie o projeto.
 ---
 
-# **Sumário**
+# **Sumário API**
 
-1. [Base URL](#base-url)
-2. [Endpoints](#endpoints)
-   1. [**/api/rawmaterial**](#apirawmaterial)
-      - [GET - Obter todos as materias primas](#get---obter-todos-as-materias-primas)
-      - [GET {id} - Obter materia prima por ID](#get-id---obter-materia-prima-por-id)
-      - [POST - Criar materia prima](#post---criar-materia-prima)
-      - [PUT {id} - Atualizar materia prima](#put-id---atualizar-materia-prima)
-      - [DELETE {id} - Deletar materia prima](#delete-id---deletar-materia-prima)
-   2. [**/api/medicine**](#apimedicine)
-      - [GET - Obter todos os medicamentos](#get---obter-todos-os-medicamentos)
-      - [GET {id} - Obter medicamento por ID](#get-id---obter-medicamento-por-id)
-      - [POST - Criar medicamento](#post---criar-medicamento)
-      - [PUT {id} - Atualizar medicamento](#put-id---atualizar-medicamento)
-      - [DELETE {id} - Deletar medicamento](#delete-id---deletar-medicamento)
-   3. [**/api/order**](#apiorder)
-      - [GET - Obter todos os pedidos](#get---obter-todos-os-pedidos)
-      - [GET {id} - Obter pedido por ID](#get-id---obter-pedido-por-id)
-      - [POST - Criar pedido](#post---criar-pedido)
-      - [PUT {id} - Atualizar pedido](#put-id---atualizar-pedido)
-      - [DELETE {id} - Deletar pedido](#delete-id---deletar-pedido)
-        
+1. [Endpoints](#endpoints)
+    - [**/api/rawmaterial**](#apirawmaterial)
+    - [**/api/medicine**](#apimedicine)
+    - [**/api/order**](#apiorder)
+    - [**/api/client**](#apiclient)
 ---
 
 # **Documentação da API - PharmaWeb**   
@@ -294,4 +278,82 @@ PharmaWeb é um sistema de gestão de pedidos e estoque de medicamentos, desenvo
     - **Código 204**: Deletado com sucesso.
     - **Código 404**: Pedido não encontrado.
     - **Código 500**: Erro ao deletar pedido.
+---
+
+## **/api/client**
+
+### **GET** - **Obter todos os clientes**
+- **URL**: `/api/client`
+- **Método**: GET
+- **Descrição**: Retorna todos os clientes cadastrados no sistema.
+- **Resposta**:
+    - **Código 200**: Lista de clientes.
+    - **Código 500**: Erro ao tentar obter clientes.
+
+### **GET {id}** - **Obter cliente por ID**
+- **URL**: `/api/client/{id}`
+- **Método**: GET
+- **Descrição**: Retorna um cliente com base no ID fornecido.
+- **Parâmetros**:
+    - `id` (path): ID do cliente.
+- **Resposta**:
+    - **Código 200**: Cliente encontrado.
+    - **Código 404**: Cliente não encontrado.
+    - **Código 500**: Erro ao buscar cliente.
+
+### **POST** - **Criar cliente**
+- **URL**: `/api/client`
+- **Método**: POST
+- **Descrição**: Cria um novo cliente.
+- **Corpo**:
+    ```json
+    {
+        "name": "Joao Pedro Almeida",
+        "cpf": "36587854502",
+        "address": "Avenida Pereira Barreto, 55",
+        "cellphone": "11968565252",
+        "email": "joao.pedro@email.com"
+    }
+    ```
+- **Resposta**:
+    - **Código 201**: Cliente criado com sucesso.
+    - **Código 500**: Erro ao criar cliente.
+
+### **PUT {id}** - **Atualizar cliente**
+- **URL**: `/api/client/{id}`
+- **Método**: PUT
+- **Descrição**: Atualiza um cliente existente.
+- **Parâmetros**:
+    - `id` (path): ID do cliente a ser atualizado.
+- **Corpo**:
+    ```json
+    {
+        "clientId": 3,
+        "name": "Carlos Santos Ramos",
+        "cpf": "34567890126",
+        "address": "Rua C, 300, Belo Horizonte",
+        "cellphone": "31977770003",
+        "email": "carlos.santos@email.com",
+        "orders": {
+          "$id": "2",
+          "$values": []
+        }
+    }
+    ```
+- **Resposta**:
+    - **Código 204**: Atualização bem-sucedida.
+    - **Código 400**: ID inconsistente.
+    - **Código 500**: Erro ao atualizar cliente.
+
+### **DELETE {id}** - **Deletar cliente**
+- **URL**: `/api/client/{id}`
+- **Método**: DELETE
+- **Descrição**: Deleta um cliente existente.
+- **Parâmetros**:
+    - `id` (path): ID do cliente a ser deletado.
+- **Resposta**:
+    - **Código 204**: Deletado com sucesso.
+    - **Código 404**: Cliente não encontrado.
+    - **Código 500**: Erro ao deletar cliente.
+
 ---
