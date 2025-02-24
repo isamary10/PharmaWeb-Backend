@@ -280,9 +280,9 @@ PharmaWeb é um sistema de gestão de pedidos e estoque de medicamentos, desenvo
     - **Código 500**: Erro ao deletar pedido.
 ---
 
-## **/api/client**
+##### **/api/client**
 
-### **GET** - **Obter todos os clientes**
+##### **GET** - **Obter todos os clientes**
 - **URL**: `/api/client`
 - **Método**: GET
 - **Descrição**: Retorna todos os clientes cadastrados no sistema.
@@ -290,7 +290,7 @@ PharmaWeb é um sistema de gestão de pedidos e estoque de medicamentos, desenvo
     - **Código 200**: Lista de clientes.
     - **Código 500**: Erro ao tentar obter clientes.
 
-### **GET {id}** - **Obter cliente por ID**
+##### **GET {id}** - **Obter cliente por ID**
 - **URL**: `/api/client/{id}`
 - **Método**: GET
 - **Descrição**: Retorna um cliente com base no ID fornecido.
@@ -301,7 +301,7 @@ PharmaWeb é um sistema de gestão de pedidos e estoque de medicamentos, desenvo
     - **Código 404**: Cliente não encontrado.
     - **Código 500**: Erro ao buscar cliente.
 
-### **POST** - **Criar cliente**
+##### **POST** - **Criar cliente**
 - **URL**: `/api/client`
 - **Método**: POST
 - **Descrição**: Cria um novo cliente.
@@ -319,7 +319,7 @@ PharmaWeb é um sistema de gestão de pedidos e estoque de medicamentos, desenvo
     - **Código 201**: Cliente criado com sucesso.
     - **Código 500**: Erro ao criar cliente.
 
-### **PUT {id}** - **Atualizar cliente**
+##### **PUT {id}** - **Atualizar cliente**
 - **URL**: `/api/client/{id}`
 - **Método**: PUT
 - **Descrição**: Atualiza um cliente existente.
@@ -345,7 +345,7 @@ PharmaWeb é um sistema de gestão de pedidos e estoque de medicamentos, desenvo
     - **Código 400**: ID inconsistente.
     - **Código 500**: Erro ao atualizar cliente.
 
-### **DELETE {id}** - **Deletar cliente**
+##### **DELETE {id}** - **Deletar cliente**
 - **URL**: `/api/client/{id}`
 - **Método**: DELETE
 - **Descrição**: Deleta um cliente existente.
