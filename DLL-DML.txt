@@ -1,0 +1,98 @@
+-- DDL: Criação das tabelas
+CREATE TABLE Tb_Pharma_Client (
+    ClientId INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL,
+    Cpf NVARCHAR(11) NOT NULL UNIQUE,
+    Address NVARCHAR(200) NOT NULL,
+    Cellphone NVARCHAR(11) NOT NULL,
+    Email NVARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE Tb_Pharma_Medicine (
+    MedicineId INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL,
+    Description NVARCHAR(500) NOT NULL,
+    Price DECIMAL(10,2) NOT NULL,
+    StockQuantity INT NOT NULL
+);
+
+CREATE TABLE Tb_Pharma_RawMaterial (
+    RawMaterialId INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL,
+    Description NVARCHAR(500) NOT NULL,
+    Supplier NVARCHAR(200) NOT NULL,
+    StockQuantity INT NOT NULL,
+    ExpirationDate DATE NOT NULL
+);
+
+CREATE TABLE Tb_Pharma_Order (
+    OrderId INT IDENTITY(1,1) PRIMARY KEY,
+    OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
+    OrderTotal DECIMAL(10,2) NOT NULL,
+    ClientId INT NOT NULL,
+    FOREIGN KEY (ClientId) REFERENCES Tb_Pharma_Client(ClientId) ON DELETE CASCADE
+);
+
+CREATE TABLE Tb_Pharma_OrderMedicine (
+    OrderId INT NOT NULL,
+    MedicineId INT NOT NULL,
+    Quantity INT NOT NULL,
+    PRIMARY KEY (OrderId, MedicineId),
+    FOREIGN KEY (OrderId) REFERENCES Tb_Pharma_Order(OrderId) ON DELETE CASCADE,
+    FOREIGN KEY (MedicineId) REFERENCES Tb_Pharma_Medicine(MedicineId) ON DELETE CASCADE
+);
+
+CREATE TABLE Tb_Pharma_MedicineRawMaterial (
+    MedicineId INT NOT NULL,
+    RawMaterialId INT NOT NULL,
+    PRIMARY KEY (MedicineId, RawMaterialId),
+    FOREIGN KEY (MedicineId) REFERENCES Tb_Pharma_Medicine(MedicineId) ON DELETE CASCADE,
+    FOREIGN KEY (RawMaterialId) REFERENCES Tb_Pharma_RawMaterial(RawMaterialId) ON DELETE CASCADE
+);
+
+-- DML: Insert dados de exemplo
+INSERT INTO Tb_Pharma_Client (Name, Cpf, Address, Cellphone, Email)
+VALUES ('João Silva', '12345678901', 'Rua A, 123', '11999998888', 'joao@email.com');
+
+INSERT INTO Tb_Pharma_Medicine (Name, Description, Price, StockQuantity)
+VALUES ('Paracetamol', 'Analgésico e antitérmico', 10.50, 100);
+
+INSERT INTO Tb_Pharma_RawMaterial (Name, Description, Supplier, StockQuantity, ExpirationDate)
+VALUES ('Ácido Acetilsalicílico', 'Usado na produção de analgésicos', 'Fornecedor X', 500, '2026-12-31');
+
+INSERT INTO Tb_Pharma_Order (OrderDate, OrderTotal, ClientId)
+VALUES (GETDATE(), 21.00, 1);
+
+INSERT INTO Tb_Pharma_OrderMedicine (OrderId, MedicineId, Quantity)
+VALUES (1, 1, 2);
+
+INSERT INTO Tb_Pharma_MedicineRawMaterial (MedicineId, RawMaterialId)
+VALUES (1, 1);
+
+-- DML: Atualizações
+UPDATE Tb_Pharma_Client SET Address = 'Rua Nova, 456' WHERE ClientId = 1;
+UPDATE Tb_Pharma_Medicine SET Price = 12.00 WHERE MedicineId = 1;
+UPDATE Tb_Pharma_Order SET OrderTotal = 25.00 WHERE OrderId = 1;
+UPDATE Tb_Pharma_OrderMedicine SET Quantity = 3 WHERE OrderId = 1 AND MedicineId = 1;
+UPDATE Tb_Pharma_RawMaterial SET StockQuantity = 400 WHERE RawMaterialId = 1;
+
+-- DML: Consultas (SELECT)
+SELECT * FROM Tb_Pharma_Client;
+SELECT * FROM Tb_Pharma_Medicine;
+SELECT * FROM Tb_Pharma_RawMaterial;
+SELECT * FROM Tb_Pharma_Order;
+SELECT * FROM Tb_Pharma_OrderMedicine;
+SELECT * FROM Tb_Pharma_MedicineRawMaterial;
+
+-- DML: Removendo registros
+DELETE FROM Tb_Pharma_OrderMedicine WHERE OrderId = 1 AND MedicineId = 1;
+DELETE FROM Tb_Pharma_Order WHERE OrderId = 1;
+DELETE FROM Tb_Pharma_Client WHERE ClientId = 1;
+
+-- DML: Limpando tabelas sem remover estrutura
+TRUNCATE TABLE Tb_Pharma_OrderMedicine;
+TRUNCATE TABLE Tb_Pharma_Order;
+TRUNCATE TABLE Tb_Pharma_Client;
+TRUNCATE TABLE Tb_Pharma_MedicineRawMaterial;
+TRUNCATE TABLE Tb_Pharma_Medicine;
+TRUNCATE TABLE Tb_Pharma_RawMaterial;
