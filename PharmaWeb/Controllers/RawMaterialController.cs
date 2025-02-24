@@ -87,7 +87,7 @@ namespace PharmaWeb.Controllers
                 if (rawMaterial == null)
                     return NotFound($"RawMaterial with ID {id} not found.");
 
-                // Remover todas as associações na tabela de junção
+                // remove todas as associações na tabela de junção
                 _context.MedicinesRawMaterials.RemoveRange(_context.MedicinesRawMaterials.Where(mr => mr.RawMaterialId == id));
                 await _context.SaveChangesAsync();
 

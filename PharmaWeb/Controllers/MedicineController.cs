@@ -55,7 +55,6 @@ namespace PharmaWeb.Controllers
         {
             try
             {
-                // Criar o objeto Medicine sem a composição
                 var medicine = new Medicine
                 {
                     Name = medicineDto.Name,
@@ -65,17 +64,16 @@ namespace PharmaWeb.Controllers
                     Composition = new List<MedicineRawMaterial>()
                 };
 
-                // Primeiro, adicionamos o medicine no banco para gerar o ID
                 await _repositoryMedicine.AddAsync(medicine);
 
-                // Verificar e adicionar os RawMaterials à composição
+                // verifica e adiciona os RawMaterials a composição
                 foreach (var item in medicineDto.Composition)
                 {
                     var rawMaterial = await _repositoryRawMaterial.GetByIdAsync(item.RawMaterialId);
                     if (rawMaterial == null)
                         return BadRequest($"RawMaterialId {item.RawMaterialId} not found.");
 
-                    // Adicionar relação na tabela de composição
+                    // adiciona relação na tabela de composição
                     var medicineRawMaterial = new MedicineRawMaterial
                     {
                         MedicineId = medicine.MedicineId, // Agora temos certeza de que esse ID existe
@@ -85,7 +83,6 @@ namespace PharmaWeb.Controllers
                     _context.MedicinesRawMaterials.Add(medicineRawMaterial);
                 }
 
-                // Salvar as relações na tabela de relacionamento
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(GetById), new { id = medicine.MedicineId }, medicine);

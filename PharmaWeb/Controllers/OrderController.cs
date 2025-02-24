@@ -94,7 +94,7 @@ namespace PharmaWeb.Controllers
                     });
                 }
 
-                // Atualiza o estoque, passando os medicamentos adicionados
+                // atualiza o estoque, passando os medicamentos adicionados
                 var stockUpdated = await UpdateStockQuantityForCreate(order.OrderId, addedMedicines);
                 if (!stockUpdated)
                 {
@@ -142,8 +142,6 @@ namespace PharmaWeb.Controllers
                 existingOrder.OrderDate = orderDto.OrderDate;
                 existingOrder.ClientId = orderDto.ClientId;
 
-                //var existingMedicines = existingOrder.OrdersMedicines.ToList();
-
                 // remove os medicamentos que não estão no novo DTO
                 existingOrder.OrdersMedicines.RemoveAll(om =>
                     !orderDto.OrdersMedicines.Any(newOm => newOm.MedicineId == om.MedicineId));
@@ -178,7 +176,6 @@ namespace PharmaWeb.Controllers
                     return BadRequest("Erro ao atualizar o estoque. Verifique se há estoque suficiente.");
                 }
 
-                // calcula o total do pedido após atualizar os medicamentos
                 existingOrder.OrderTotal = await CalculateOrderTotal(existingOrder.OrderId);
 
                 await _context.SaveChangesAsync();
@@ -244,7 +241,7 @@ namespace PharmaWeb.Controllers
         {
             try
             {
-                // Deduz do estoque os medicamentos que foram adicionados ao pedido
+                // subtrai do estoque os medicamentos que foram adicionados ao pedido
                 foreach (var addedMedicine in addedMedicines)
                 {
                     var medicine = await _context.Medicines
@@ -252,16 +249,13 @@ namespace PharmaWeb.Controllers
 
                     if (medicine != null)
                     {
-                        // Verifica se há estoque suficiente
                         if (medicine.StockQuantity < addedMedicine.Quantity)
                             return false;
 
-                        // Deduz a quantidade do estoque
                         medicine.StockQuantity -= addedMedicine.Quantity;
                     }
                 }
 
-                // Salva as alterações no banco de dados
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -275,34 +269,30 @@ namespace PharmaWeb.Controllers
         {
             try
             {
-                // Adiciona de volta ao estoque os medicamentos removidos no Update
                 foreach (var removedMedicine in removedMedicines)
                 {
                     var medicine = await _context.Medicines.FirstOrDefaultAsync(m => m.MedicineId == removedMedicine.MedicineId);
                     if (medicine != null)
                     {
-                        // Adiciona ao estoque a quantidade removida
                         medicine.StockQuantity += removedMedicine.Quantity;
                     }
                 }
 
-                // Adiciona ao estoque a diferença de quantidade para os medicamentos que tiveram a quantidade reduzida
                 foreach (var updatedMedicine in updatedMedicines)
                 {
-                    // BUSCA A QUANTIDADE ORIGINAL DA ORDEM ANTES DA ALTERAÇÃO
+
                     var originalOrderMedicine = await _context.OrdersMedicines
-                        .AsNoTracking() // Garante que o EF Core não pegue uma versão modificada
+                        .AsNoTracking() // garante que o EF Core não pegue uma versão modificada
                         .FirstOrDefaultAsync(om => om.OrderId == orderId && om.MedicineId == updatedMedicine.MedicineId);
 
                     if (originalOrderMedicine != null)
                     {
-                        int originalQuantity = originalOrderMedicine.Quantity; // Quantidade antes da atualização
-                        int newQuantity = updatedMedicine.Quantity; // Nova quantidade informada
+                        int originalQuantity = originalOrderMedicine.Quantity;
+                        int newQuantity = updatedMedicine.Quantity;
 
                         var medicine = await _context.Medicines
                                 .FirstOrDefaultAsync(m => m.MedicineId == updatedMedicine.MedicineId);
 
-                        // Se a nova quantidade for menor que a original, devolve a diferença ao estoque
                         if (newQuantity < originalQuantity)
                         {
                             if (medicine != null)
@@ -320,7 +310,6 @@ namespace PharmaWeb.Controllers
                     }
                 }
 
-                // Salva as alterações no banco de dados
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -348,11 +337,9 @@ namespace PharmaWeb.Controllers
                     if (orderMedicine.Medicine == null)
                         continue;
 
-                    // Repor o estoque com a quantidade que foi retirada
                     orderMedicine.Medicine.StockQuantity += orderMedicine.Quantity;
                 }
 
-                // Salva as alterações no banco de dados
                 await _context.SaveChangesAsync();
                 return true;
             }
