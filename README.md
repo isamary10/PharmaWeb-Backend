@@ -48,9 +48,7 @@ PharmaWeb é um sistema de gestão de pedidos e estoque de medicamentos, desenvo
       - [POST - Criar pedido](#post---criar-pedido)
       - [PUT {id} - Atualizar pedido](#put-id---atualizar-pedido)
       - [DELETE {id} - Deletar pedido](#delete-id---deletar-pedido)
-3. [Modelos de Dados](#modelos-de-dados)
-   - [RawMaterial](#rawmaterial)
-
+        
 ---
 
 # **Documentação da API - PharmaWeb**   
